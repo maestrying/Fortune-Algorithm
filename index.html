@@ -1,0 +1,125 @@
+<html>
+<head> 
+    <title>Алгоритм Форчуна</title> 
+    <meta charset="utf-8"> 
+    <style type="text/css">
+        body { margin: 0; padding: 0; height: 100%; font-size:20px;}
+    </style>
+    
+    <script type="text/javascript" src="set_point.js"></script> 
+    <script type="text/javascript" src="edge.js"></script> 
+    <script type="text/javascript" src="event.js"></script> 
+    <script type="text/javascript" src="parabola.js"></script> 
+    <script type="text/javascript" src="queue.js"></script>
+    <script type="text/javascript" src="polygon.js"></script>
+    <script type="text/javascript" src="algorithm.js"></script> 
+    
+    <script type="application/javascript">
+        var voronoi = true;
+        var canv = null;
+        //var colors = [];
+        
+        function mouseX(e){	return e.clientX - e.target.offsetLeft;}
+        function mouseY(e){	return e.clientY - e.target.offsetTop; }
+        
+        function onLoad()
+        {
+            canv = document.getElementById("c"); // получаем канвас
+            canv.onmousemove = onMM;
+            canv.onclick = onClick;
+            c = canv.getContext("2d");
+            w = canv.width = window.innerWidth;
+            h = canv.height = window.innerHeight;
+            points = [];
+            v = new Voronoi();
+            
+            for(i = 0; i < 10; i++)
+            {
+                points.push(new Point(Math.random()*w, Math.random()*h));
+                colors.push(rndCol()); // получаем пустой канвас при перезагрузке
+            }
+                
+            redraw();
+        }
+        
+        function onMM(e)
+        {
+            var last = points[points.length-1];
+            last.x = mouseX(e);
+            last.y = mouseY(e);
+            redraw();
+        }
+        
+        function onClick(e)
+        {
+            var last = points[points.length-1];
+            last.x += Math.random();
+            last.y += Math.random();
+            points.push(new Point(mouseX(e), mouseY(e)));
+            colors.push(rndCol());
+        }
+        
+        // очистка поля
+        function resetPoints()
+        {
+            points = [points[points.length-1]];
+            redraw();
+        }
+        
+        function redraw()
+        {
+            c.fillStyle = "#ffffff"; // цвет бг
+            c.fillRect (0, 0, w, h); // заполнение всего канваса цветом бг
+            
+            v.Compute(points, w, h);
+            edges = v.GetEdges();
+            cells = v.GetCells();
+            
+            if(voronoi)
+            {
+                c.lineWidth = 3; // толщина обводки локуса
+                c.strokeStyle = "#042444"; // цвет обводки локуса
+                for(i=0; i<edges.length; i++)
+                {
+                    var e = edges[i];
+                    c.beginPath();
+                    c.moveTo(e.start.x, e.start.y);
+                    c.lineTo(e.end.x, e.end.y);
+                    c.closePath();
+                    c.stroke();
+                }
+            }
+            
+            c.fillStyle = "#0404FC"; // цвет сайта
+            for(i=0; i<points.length; i++)
+            {
+                var p = points[i];
+                c.beginPath();
+                c.arc(p.x, p.y, 4, 0, Math.PI*2, true); // размер сайта
+                c.closePath();
+                c.fill();
+            }
+        }
+        
+        // установка рандомного цвета для локусов
+        function rndCol() {
+            // var letters = '0123456789ABCDEF'.split('');
+            // var color = '#';
+            // for (var i = 0; i < 6; i++ ) {
+            //     color += letters[Math.round(Math.random() * 15)];
+            // }
+            // return color;
+        }
+    
+    </script> 
+</head> 
+
+<body onload="onLoad()"> 
+
+    <form style="position:absolute; z-index:1; margin-top: 10px; margin-left: 10px;">
+        <input type="button" value="очистить" onclick="resetPoints();" style="width:100px; height:30px; font-size: 40px;">
+    </form>
+    <canvas id="c" width="1440" height="820"> </canvas>
+ 
+</body>
+</html>

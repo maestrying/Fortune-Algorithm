@@ -96,7 +96,7 @@ class Queue {
 		return this.q.pop();
 	}
     remove(e) {
-		var index = -1;
+		let index = -1;
 		for (this.i = 0; this.i < this.q.length; this.i++) {
 			if (this.q[this.i] == e) { index = this.i; break; }
 		}
@@ -132,9 +132,9 @@ class Polygon {
 			this.first = p;
 	}
     addLeft(p) {
-		var vs = this.vertices;
+		let vs = this.vertices;
 		this.vertices = [p];
-		for (var i = 0; i < vs.length; i++)
+		for (let i = 0; i < vs.length; i++)
 			this.vertices.push(vs[i]);
 
 		++this.size;
@@ -175,17 +175,17 @@ class Voronoi {
         this.queue.clear(true);
 
         for (i = 0; i < this.places.length; i++) {
-            var ev = new Event(this.places[i], true);
-            var cell = new Polygon();
+            let ev = new Event(this.places[i], true);
+            let cell = new Polygon();
             this.places[i].cell = cell;
             this.queue.enqueue(ev);
             this.cells.push(cell);
         }
 
-        var lasty = Number.MAX_VALUE;
-        var num = 0;
+        let lasty = Number.MAX_VALUE;
+        let num = 0;
         while (!this.queue.isEmpty()) {
-            var e = this.queue.dequeue();
+            let e = this.queue.dequeue();
             this.ly = e.point.y;
             if (e.pe)
                 this.InsertParabola(e.point);
@@ -215,7 +215,7 @@ class Voronoi {
             this.root.isLeaf = false;
             this.root.left = new Parabola(this.fp);
             this.root.right = new Parabola(p);
-            var s = new Point((p.x + this.fp.x) / 2, this.height);
+            let s = new Point((p.x + this.fp.x) / 2, this.height);
             if (p.x > this.fp.x)
                 this.root.edge = new Edge(s, this.fp, p);
             else
@@ -224,17 +224,17 @@ class Voronoi {
             return;
         }
 
-        var par = this.GetParabolaByX(p.x);
+        let par = this.GetParabolaByX(p.x);
 
         if (par.cEvent) {
             this.queue.remove(par.cEvent);
             par.cEvent = null;
         }
 
-        var start = new Point(p.x, this.GetY(par.site, p.x));
+        let start = new Point(p.x, this.GetY(par.site, p.x));
 
-        var el = new Edge(start, par.site, p);
-        var er = new Edge(start, p, par.site);
+        let el = new Edge(start, par.site, p);
+        let er = new Edge(start, p, par.site);
 
         el.neighbour = er;
         this.edges.push(el);
@@ -242,9 +242,9 @@ class Voronoi {
         par.edge = er;
         par.isLeaf = false;
 
-        var p0 = new Parabola(par.site);
-        var p1 = new Parabola(p);
-        var p2 = new Parabola(par.site);
+        let p0 = new Parabola(par.site);
+        let p1 = new Parabola(p);
+        let p2 = new Parabola(par.site);
 
         par.right = p2;
         par.left = new Parabola();
@@ -257,18 +257,18 @@ class Voronoi {
         this.CheckCircle(p2);
     }
     RemoveParabola(e) {
-        var p1 = e.arch;
+        let p1 = e.arch;
 
-        var xl = this.GetLeftParent(p1);
-        var xr = this.GetRightParent(p1);
+        let xl = this.GetLeftParent(p1);
+        let xr = this.GetRightParent(p1);
 
-        var p0 = this.GetLeftChild(xl);
-        var p2 = this.GetRightChild(xr);
+        let p0 = this.GetLeftChild(xl);
+        let p2 = this.GetRightChild(xr);
 
         if (p0.cEvent) { this.queue.remove(p0.cEvent); p0.cEvent = null; }
         if (p2.cEvent) { this.queue.remove(p2.cEvent); p2.cEvent = null; }
 
-        var p = new Point(e.point.x, this.GetY(p1.site, e.point.x));
+        let p = new Point(e.point.x, this.GetY(p1.site, e.point.x));
 
 
         if (p0.site.cell.last == p1.site.cell.first)
@@ -284,8 +284,8 @@ class Voronoi {
         xl.edge.end = p;
         xr.edge.end = p;
 
-        var higher;
-        var par = p1;
+        let higher;
+        let par = p1;
         while (par != this.root) {
             par = par.parent;
             if (par == xl) { higher = xl; }
@@ -296,7 +296,7 @@ class Voronoi {
 
         this.edges.push(higher.edge);
 
-        var gparent = p1.parent.parent;
+        let gparent = p1.parent.parent;
         if (p1.parent.left == p1) {
             if (gparent.left == p1.parent)
                 gparent.left = p1.parent.right;
@@ -315,7 +315,7 @@ class Voronoi {
         this.CheckCircle(p2);
     }
     FinishEdge(n) {
-        var mx;
+        let mx;
         if (n.edge.direction.x > 0.0) {
             mx = Math.max(this.width, n.edge.start.x + 10);
         }
@@ -331,34 +331,34 @@ class Voronoi {
             this.FinishEdge(n.right);
     }
     GetXOfEdge(par, y) {
-        var left = this.GetLeftChild(par);
-        var right = this.GetRightChild(par);
+        let left = this.GetLeftChild(par);
+        let right = this.GetRightChild(par);
 
-        var p = left.site;
-        var r = right.site;
+        let p = left.site;
+        let r = right.site;
 
-        var dp = 2 * (p.y - y);
-        var a1 = 1 / dp;
-        var b1 = -2 * p.x / dp;
-        var c1 = y + dp * 0.25 + p.x * p.x / dp;
+        let dp = 2 * (p.y - y);
+        let a1 = 1 / dp;
+        let b1 = -2 * p.x / dp;
+        let c1 = y + dp * 0.25 + p.x * p.x / dp;
 
         dp = 2 * (r.y - y);
-        var a2 = 1 / dp;
-        var b2 = -2 * r.x / dp;
-        var c2 = y + dp * 0.25 + r.x * r.x / dp;
+        let a2 = 1 / dp;
+        let b2 = -2 * r.x / dp;
+        let c2 = y + dp * 0.25 + r.x * r.x / dp;
 
-        var a = a1 - a2;
-        var b = b1 - b2;
-        var c = c1 - c2;
+        let a = a1 - a2;
+        let b = b1 - b2;
+        let c = c1 - c2;
 
         if (a == 0)
             return -c / b;
 
-        var disc = b * b - 4 * a * c;
-        var x1 = (-b + Math.sqrt(disc)) / (2 * a);
-        var x2 = (-b - Math.sqrt(disc)) / (2 * a);
+        let disc = b * b - 4 * a * c;
+        let x1 = (-b + Math.sqrt(disc)) / (2 * a);
+        let x2 = (-b - Math.sqrt(disc)) / (2 * a);
 
-        var ry;
+        let ry;
         if (p.y < r.y)
             ry = Math.max(x1, x2);
         else
@@ -367,8 +367,8 @@ class Voronoi {
         return ry;
     }
     GetParabolaByX(xx) {
-        var par = this.root;
-        var x = 0;
+        let par = this.root;
+        let x = 0;
 
         while (!par.isLeaf) {
             x = this.GetXOfEdge(par, this.ly);
@@ -380,42 +380,42 @@ class Voronoi {
         return par;
     }
     GetY(p, x) {
-        var dp = 2 * (p.y - this.ly);
-        var b1 = -2 * p.x / dp;
-        var c1 = this.ly + dp / 4 + p.x * p.x / dp;
+        let dp = 2 * (p.y - this.ly);
+        let b1 = -2 * p.x / dp;
+        let c1 = this.ly + dp / 4 + p.x * p.x / dp;
 
         return (x * x / dp + b1 * x + c1);
     }
     CheckCircle(b) {
-        var lp = this.GetLeftParent(b);
-        var rp = this.GetRightParent(b);
+        let lp = this.GetLeftParent(b);
+        let rp = this.GetRightParent(b);
 
-        var a = this.GetLeftChild(lp);
-        var c = this.GetRightChild(rp);
+        let a = this.GetLeftChild(lp);
+        let c = this.GetRightChild(rp);
 
         if (!a || !c || a.site == c.site)
             return;
 
-        var s = this.GetEdgeIntersection(lp.edge, rp.edge);
+        let s = this.GetEdgeIntersection(lp.edge, rp.edge);
         if (!s)
             return;
 
-        var d = Point.prototype.distance(a.site, s);
+        let d = Point.prototype.distance(a.site, s);
         //if(d > 5000) return;
         if (s.y - d >= this.ly)
             return;
 
-        var e = new Event(new Point(s.x, s.y - d), false);
+        let e = new Event(new Point(s.x, s.y - d), false);
 
         b.cEvent = e;
         e.arch = b;
         this.queue.enqueue(e);
     }
     GetEdgeIntersection(a, b) {
-        var I = GetLineIntersection(a.start, a.B, b.start, b.B);
+        let I = GetLineIntersection(a.start, a.B, b.start, b.B);
 
         // wrong direction of edge
-        var wd = (I.x - a.start.x) * a.direction.x < 0 || (I.y - a.start.y) * a.direction.y < 0
+        let wd = (I.x - a.start.x) * a.direction.x < 0 || (I.y - a.start.y) * a.direction.y < 0
             || (I.x - b.start.x) * b.direction.x < 0 || (I.y - b.start.y) * b.direction.y < 0;
 
         if (wd)
@@ -429,8 +429,8 @@ class Voronoi {
         return this.GetRightChild(this.GetRightParent(n));
     }
     GetLeftParent(n) {
-        var par = n.parent;
-        var pLast = n;
+        let par = n.parent;
+        let pLast = n;
         while (par.left == pLast) {
             if (!par.parent)
                 return null;
@@ -439,8 +439,8 @@ class Voronoi {
         return par;
     }
     GetRightParent(n) {
-        var par = n.parent;
-        var pLast = n;
+        let par = n.parent;
+        let pLast = n;
         while (par.right == pLast) {
             if (!par.parent)
                 return null;
@@ -451,7 +451,7 @@ class Voronoi {
     GetLeftChild(n) {
         if (!n)
             return null;
-        var par = n.left;
+        let par = n.left;
         while (!par.isLeaf)
             par = par.right;
         return par;
@@ -459,7 +459,7 @@ class Voronoi {
     GetRightChild(n) {
         if (!n)
             return null;
-        var par = n.right;
+        let par = n.right;
         while (!par.isLeaf)
             par = par.left;
         return par;
@@ -468,16 +468,16 @@ class Voronoi {
 
 function GetLineIntersection(a1, a2, b1, b2)
 {			
-	var dax = (a1.x-a2.x), dbx = (b1.x-b2.x);
-	var day = (a1.y-a2.y), dby = (b1.y-b2.y);
+	let dax = (a1.x-a2.x), dbx = (b1.x-b2.x);
+	let day = (a1.y-a2.y), dby = (b1.y-b2.y);
 			
-	var Den = dax*dby - day*dbx;
+	let Den = dax*dby - day*dbx;
 	if (Den == 0) return null;	// parallel
 
-	var A = (a1.x * a2.y - a1.y * a2.x);
-	var B = (b1.x * b2.y - b1.y * b2.x);
+	let A = (a1.x * a2.y - a1.y * a2.x);
+	let B = (b1.x * b2.y - b1.y * b2.x);
 		
-	var I = new Point(0,0);
+	let I = new Point(0,0);
 	I.x = ( A*dbx - dax*B ) / Den;
 	I.y = ( A*dby - day*B ) / Den;
 	

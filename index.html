@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,11 @@
         body { margin: 0; padding: 0; height: 100%; background-color: #313131;}
     </style>
 
-    <script type="text/javascript" src="algorythm.js"></script>
-    <script type="application/javascript">
-        var voronoi = true;
-        var canv = null;
-        //var colors = [];
+    <script src="algorithm.js"></script>
+    <script>
+        let voronoi = true;
+        let canv = null;
+        //let colors = [];
         
         function mouseX(event){	return event.clientX - event.target.offsetLeft; } // считывание позиции по горизонтали
         function mouseY(event){	return event.clientY - event.target.offsetTop; } // считывание позиции по вертикали
@@ -37,14 +37,14 @@
         }
         
         function onMM(e) {
-            var last = points[points.length-1];
+            let last = points[points.length-1];
             last.x = mouseX(e);
             last.y = mouseY(e);
             redraw();
         }
         
         function onClick(e) {
-            var last = points[points.length-1];
+            let last = points[points.length-1];
             last.x += Math.random();
             last.y += Math.random();
             points.push(new Point(mouseX(e), mouseY(e)));
@@ -71,7 +71,7 @@
                 c.strokeStyle = "#11CBD7"; // цвет обводки локуса
                 for(i = 0; i < edges.length; i++)
                 {
-                    var e = edges[i];
+                    let e = edges[i];
                     c.beginPath();
                     c.moveTo(e.start.x, e.start.y);
                     c.lineTo(e.end.x, e.end.y);
@@ -83,7 +83,7 @@
             c.fillStyle = "#604FDD"; // цвет сайта
             for(i = 0; i < points.length; i++)
             {
-                var p = points[i];
+                let p = points[i];
                 c.beginPath();
                 c.arc(p.x, p.y, 4, 0, Math.PI * 2, true); // размер сайта
                 c.closePath();
@@ -91,9 +91,9 @@
             }
         }
         function rndCol() {
-            // var letters = '0123456789ABCDEF'.split('');
-            // var color = '#';
-            // for (var i = 0; i < 6; i++ ) {
+            // let letters = '0123456789ABCDEF'.split('');
+            // let color = '#';
+            // for (let i = 0; i < 6; i++ ) {
             //     color += letters[Math.round(Math.random() * 15)];
             // }
             // return color;

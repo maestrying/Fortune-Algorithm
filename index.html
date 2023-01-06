@@ -1,19 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Алгоритм</title>
-    <style>
-        body { margin: 0; padding: 0; height: 100%; background-color: #313131;}
-    </style>
+    <link rel="stylesheet" href="main.css">
 
     <script src="algorithm.js"></script>
     <script>
         let voronoi = true;
         let canv = null;
-        //let colors = [];
         
         function mouseX(event){	return event.clientX - event.target.offsetLeft; } // считывание позиции по горизонтали
         function mouseY(event){	return event.clientY - event.target.offsetTop; } // считывание позиции по вертикали
@@ -26,14 +23,25 @@
             w = canv.width = window.innerWidth;
             h = canv.height = window.innerHeight;
             points = [];
+
             v = new Voronoi();
+            points.push(new Point()); // получаем пустой канвас при перезагрузке
             
-            for(i = 0; i < 10; i++) {
-                points.push(new Point(Math.random() * w, Math.random() * h));
-                colors.push(rndCol()); // получаем пустой канвас при перезагрузке
-            }
-                
             redraw();
+        }
+
+        // T E S T S
+        function TestRandom(value) {
+            for (i = 0; i < value; i++) {
+                points.push(new Point(Math.random() * w, Math.random() * h));
+            }
+        }
+
+        function Test1() {
+            points.push(new Point(300, 200));
+            points.push(new Point(600, 200));
+            points.push(new Point(300, 400));
+            points.push(new Point(600, 400));
         }
         
         function onMM(e) {
@@ -48,7 +56,6 @@
             last.x += Math.random();
             last.y += Math.random();
             points.push(new Point(mouseX(e), mouseY(e)));
-            colors.push(rndCol());
         }
         
         // очистка поля
@@ -58,19 +65,17 @@
         }
         
         function redraw() {
-            c.fillStyle = "#313131"; // цвет бг
+            c.fillStyle = "#1a1a1a"; // цвет бг
             c.fillRect (0, 0, w, h); // заполнение всего канваса цветом бг
             
             v.Compute(points, w, h);
             edges = v.GetEdges();
             cells = v.GetCells();
             
-            if(voronoi)
-            {
+            if(voronoi) {
                 c.lineWidth = 3; // толщина обводки локуса
                 c.strokeStyle = "#11CBD7"; // цвет обводки локуса
-                for(i = 0; i < edges.length; i++)
-                {
+                for(i = 0; i < edges.length; i++) {
                     let e = edges[i];
                     c.beginPath();
                     c.moveTo(e.start.x, e.start.y);
@@ -81,8 +86,7 @@
             }
             
             c.fillStyle = "#604FDD"; // цвет сайта
-            for(i = 0; i < points.length; i++)
-            {
+            for(i = 0; i < points.length; i++) {
                 let p = points[i];
                 c.beginPath();
                 c.arc(p.x, p.y, 4, 0, Math.PI * 2, true); // размер сайта
@@ -90,20 +94,19 @@
                 c.fill();
             }
         }
-        function rndCol() {
-            // let letters = '0123456789ABCDEF'.split('');
-            // let color = '#';
-            // for (let i = 0; i < 6; i++ ) {
-            //     color += letters[Math.round(Math.random() * 15)];
-            // }
-            // return color;
-        }
     </script>
 </head>
 <body onload="onLoad()">
-    <form style="position:absolute; z-index:1; margin-top: 10px; margin-left: 10px;">
-        <input type="button" value="очистить" onclick="resetPoints();" style="width:100px; height:30px; font-size: 40px;">
-    </form>
-    <canvas id="canvas" width="1440" height="820"></canvas> <!-- создаем область, в которую можно внедрить 2д, 3д объекты за счет контекста -->
+    <div class="menu">
+        <label>// random points</label>
+        <input onchange="TestRandom(this.value)" type="test" placeholder="Enter the number" style="margin: 0;">
+
+        <label>// Test 1: circle</label>
+        <button onclick="Test1()">Test 1</button>
+
+        <button onclick="resetPoints();" style="margin-top: 30px;">clear</button>
+    </div>
+
+    <canvas id="canvas" width="1440" height="820"></canvas> <!-- создаем область, в которой будет отрисовка 2д линий и точек -->
 </body>
 </html>
